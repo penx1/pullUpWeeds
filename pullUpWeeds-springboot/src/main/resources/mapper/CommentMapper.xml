@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chl.pullUpWeeds.mapper.CommentMapper">
+    <resultMap id="commentMap" type="com.chl.pullUpWeeds.entity.Comment">
+        <id column="id" property="id"/>
+        <result column="author_id" property="authorId"/>
+        <result column="content" property="content"/>
+        <result column="time" property="time"/>
+        <result column="floor" property="floor"/>
+        <result column="article_id" property="articleId"/>
+    </resultMap>
+
+    <resultMap id="commentAuthorMap" extends="commentMap" type="com.chl.pullUpWeeds.entity.Comment">
+        <association property="user" column="author_id" javaType="com.chl.pullUpWeeds.entity.User"
+                     select="com.chl.pullUpWeeds.mapper.UserMapper.findUserById">
+        </association>
+    </resultMap>
+<select id="findCommentById" resultType="com.chl.pullUpWeeds.entity.Comment">
+    select * from comment where id = #{id}
+</select>
+
+    <select id="getCommentBiggestFloor" resultType="com.chl.pullUpWeeds.dto.FloorDTO">
+        select floor from comment where article_id = #{articleId} order by floor desc limit 0,1;
+    </select>
+</mapper>

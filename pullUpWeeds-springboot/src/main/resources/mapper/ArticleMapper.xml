@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chl.pullUpWeeds.mapper.ArticleMapper">
+
+	<resultMap id="articleMap" type="com.chl.pullUpWeeds.entity.Article">
+		<id column="id" property="id"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="time" property="time"/>
+		<result column="author_id" property="authorId"/>
+	</resultMap>
+
+	<resultMap id="authorArticleMap" extends="articleMap" type="com.chl.pullUpWeeds.entity.Article">
+		<association property="user" column="author_id" javaType="com.chl.pullUpWeeds.entity.User"
+					 select="com.chl.pullUpWeeds.mapper.UserMapper.findUserById">
+		</association>
+	</resultMap>
+
+<!--	<resultMap id="DetailedArticleMap" extends="authorArticleMap" type="com.chl.pullUpWeeds.entity.DetailedArticle">-->
+<!--		<collection property="comments" ofType="com.chl.pullUpWeeds.entity.Comment" select="com.chl.pullUpWeeds.mapper.CommentMapper.findCommentById">-->
+
+<!--		</collection>-->
+<!--	</resultMap>-->
+
+	<select id="getArticleById" resultMap="authorArticleMap">
+		select * from article a left join user u on a.author_id= u.id where a.id = #{id}
+	</select>
+
+</mapper>
